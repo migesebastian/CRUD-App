@@ -1,5 +1,5 @@
 {
-  "name": "men-stack-session-auth-template",
+  "name": "crud-app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.generalassemb.ly/modular-curriculum-all-courses/men-stack-session-auth-template"
+    "url": "https://github.com/migesebastian/CRUD-App.git"
   },
   "author": "",
   "license": "ISC",
