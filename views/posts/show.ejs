@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= post.title %></title>
+</head>
+<body>
+  <h1><%= post.title %></h1>
+  <p>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></p>
+  <div>
+    <p><%= post.content %></p>
+  </div>
+  <a href="/posts/<%= post._id %>/edit">Edit Post</a>
+  <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
+    <button type="submit">Delete Post</button>
+  </form>
+</body>
+</html>

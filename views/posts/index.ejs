@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Posts</title>
+</head>
+<body>
+  <h1>All Posts</h1>
+  <a href="/posts/new">Create New Post</a>
+  <% posts.forEach(function(post) { %>
+    <div>
+      <h2><a href="/posts/<%= post._id %>"><%= post.title %></a></h2>
+      <p><%= post.content.substring(0, 100) %>...</p>
+      <p>By <%= post.author.username %> on <%= post.createdAt.toDateString() %></p>
+    </div>
+  <% }) %>
+</body>
+</html>
