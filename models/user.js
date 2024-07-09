@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const postSchema = new mongoose.Schema({
+  title: { 
+    type: String, 
+    required: true 
+  },
+  content: { 
+    type: String, 
+    required: true 
+  },
+  },{
+  timestamps: true
+});
+
 const userSchema = mongoose.Schema({
   username: {
     type: String,
@@ -14,33 +27,10 @@ const userSchema = mongoose.Schema({
     required: true,
   },
   bio: String,
-  profilePicture: String
-});
-
-const postSchema = new mongoose.Schema({
-  title: { 
-    type: String, 
-    required: true 
-  },
-  content: { 
-    type: String, 
-    required: true 
-  },
-  tags: String,
-  author: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User' 
-  },
-  createdAt: { 
-    type: Date,
-    default: Date.now },
-  updatedAt: { 
-    type: Date, 
-    default: Date.now },
+  profilePicture: String,
+  post: [postSchema]
 });
 
 const User = mongoose.model('User', userSchema);
-const Posts = new mongoose.model('Posts', postSchema);
 
-module.exports = User;
-module.exports = Posts
+module.exports = User

@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const Post = require('../models/user.js');
 const User = require('../models/user.js');
 
 router.get('/', async (req, res) => {
     try {
-      const posts = await Post.findById(req.session.user._id);
+      const posts = await User.findById(req.session.user._id);
       res.render('posts/index.ejs', { posts });
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -36,7 +35,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id).populate('author').exec();
+      const post = await User.findById(req.params.id).populate('author').exec();
       res.render('posts/show.ejs', { post });
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -46,7 +45,7 @@ router.get('/:id', async (req, res) => {
 
   router.get('/:id/edit', async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id);
+      const post = await User.findById(req.params.id);
       res.render('posts/edit.ejs', { post });
     } catch (error) {
       console.error('Error fetching post for editing:', error);
@@ -57,7 +56,7 @@ router.get('/:id', async (req, res) => {
   router.put('/:id', async (req, res) => {
     try {
       const { title, content } = req.body;
-      const post = await Post.findById(req.params.id);
+      const post = await User.findById(req.params.id);
       post.title = title;
       post.content = content;
       await post.save();
@@ -70,7 +69,7 @@ router.get('/:id', async (req, res) => {
   
 router.delete('/:id', async (req, res) => {
     try {
-      await Post.findByIdAndDelete(req.params.id);
+      await User.findByIdAndDelete(req.params.id);
       res.redirect('/posts');
     } catch (error) {
       console.error('Error deleting post:', error);
