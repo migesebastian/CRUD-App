@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
     }
   });
 
-  router.get('/:id/edit', isSignedIn, async (req, res) => {
+  router.get('/:id/edit', async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);
       res.render('posts/edit.ejs', { post });
@@ -54,7 +54,7 @@ router.get('/:id', async (req, res) => {
     }
   });
 
-  router.put('/:id', isSignedIn, async (req, res) => {
+  router.put('/:id', async (req, res) => {
     try {
       const { title, content } = req.body;
       const post = await Post.findById(req.params.id);
@@ -68,7 +68,7 @@ router.get('/:id', async (req, res) => {
     }
   });
   
-router.delete('/:id', isSignedIn, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
       await Post.findByIdAndDelete(req.params.id);
       res.redirect('/posts');
@@ -77,5 +77,5 @@ router.delete('/:id', isSignedIn, async (req, res) => {
       res.redirect('/posts');
     }
   });
-  
+
 module.exports = router;
