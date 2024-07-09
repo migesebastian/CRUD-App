@@ -3,22 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nomads Abroad</title>
+  <title>Nomads Abroud</title>
 </head>
 <body>
+  <%- include('partials/_navbar') %>
   <% if (user) { %>
-    <h1>Welcome to the app, <%= user.username %>!</h1>
-    <p>
-      <a href="/auth/sign-out">Sign out</a>
-    </p>
-  <% } else { %>
-    <h1>Welcome to the app, guest.</h1>
-    <p>
-      <a href="/auth/sign-up">Sign up</a> or
-      <a href="/auth/sign-in">Sign in</a>.
-    </p>
-    <h1>Nomads Abroad Home</h1>
-    <a href="/posts">View Posts</a>
+    <p>Welcome, <%= user.username %>!</p>
   <% } %>
+  <h1>Nomads Home</h1>
+  <a href="/posts">View Posts</a>
 </body>
 </html>

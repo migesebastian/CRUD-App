@@ -3,78 +3,109 @@ const router = express.Router();
 
 const User = require('../models/user.js');
 
+// Index route for displaying the user's posts
 router.get('/', async (req, res) => {
     try {
-      const posts = await User.findById(req.session.user._id);
-      res.render('posts/index.ejs', { posts });
+      // Look up the user from req.session
+      const currentUser = await User.findById(req.session.user._id).exec();
+      // Ensure the posts array is initialized
+      const posts = currentUser.posts || [];
+      // Send all posts to the view via res.locals
+      res.render('posts/index.ejs', {
+        posts: posts,
+        user: currentUser
+      });
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      // If any errors, log them and redirect back home
+      console.log(error);
       res.redirect('/');
     }
   });
 
 router.get('/new', (req, res) => {
-    res.render('posts/new.ejs');
+    res.render('posts/new.ejs', { user: req.session.user });
   });
 
-router.post('/', async (req, res) => {
+  router.post('/', async (req, res) => {
     try {
-        const { title, content} = req.body;
-        const newPost = new Post({
-            title,
-            content, 
-            author: req.session.user._id
-        }) 
-    await newPost.save();
-    res.redirect('/posts');
-  } catch (error) {
-    console.error('Error creating post:', error);
-    res.redirect('/posts/new');
-  }
-})
-
-router.get('/:id', async (req, res) => {
-    try {
-      const post = await User.findById(req.params.id).populate('author').exec();
-      res.render('posts/show.ejs', { post });
+      const currentUser = await User.findById(req.session.user._id);
+  
+      // Ensure the posts array is initialized
+      if (!currentUser.posts) {
+        currentUser.posts = [];
+      }
+  
+      // Push req.body (the new form data object) to the posts array of the current user
+      currentUser.posts.push(req.body);
+  
+      // Save changes to the user
+      await currentUser.save();
+  
+      // Redirect back to the posts index view with a success message
+      res.redirect(`/users/${currentUser._id}/posts`);
     } catch (error) {
-      console.error('Error fetching post:', error);
+      console.log(error);
+      res.redirect('/posts/new');
+    }
+  });
+
+// Show route for displaying a specific post
+router.get('/:postId', async (req, res) => {
+    try {
+      const currentUser = await User.findById(req.session.user._id);
+      const post = currentUser.posts.id(req.params.postId);
+      res.render('posts/show.ejs', {
+        post: post,
+        user: currentUser
+      });
+    } catch (error) {
+      console.log(error);
       res.redirect('/posts');
     }
   });
 
-  router.get('/:id/edit', async (req, res) => {
+ // Edit route for rendering the form to edit a specific post
+router.get('/:postId/edit', async (req, res) => {
     try {
-      const post = await User.findById(req.params.id);
-      res.render('posts/edit.ejs', { post });
+      const currentUser = await User.findById(req.session.user._id);
+      const post = currentUser.posts.id(req.params.postId);
+      res.render('posts/edit.ejs', {
+        post: post,
+        user: currentUser
+      });
     } catch (error) {
-      console.error('Error fetching post for editing:', error);
+      console.log(error);
       res.redirect('/posts');
-    }
-  });
-
-  router.put('/:id', async (req, res) => {
-    try {
-      const { title, content } = req.body;
-      const post = await User.findById(req.params.id);
-      post.title = title;
-      post.content = content;
-      await post.save();
-      res.redirect(`/posts/${post._id}`);
-    } catch (error) {
-      console.error('Error updating post:', error);
-      res.redirect(`/posts/${req.params.id}/edit`);
     }
   });
   
-router.delete('/:id', async (req, res) => {
+// Update route for updating a specific post
+router.put('/:postId', async (req, res) => {
     try {
-      await User.findByIdAndDelete(req.params.id);
-      res.redirect('/posts');
+      const currentUser = await User.findById(req.session.user._id);
+      const post = currentUser.posts.id(req.params.postId);
+      post.set(req.body);
+      await currentUser.save();
+      res.redirect(`/users/${currentUser._id}/posts/${req.params.postId}`);
     } catch (error) {
-      console.error('Error deleting post:', error);
-      res.redirect('/posts');
+      console.log(error);
+      res.redirect(`/posts/${req.params.postId}/edit`);
     }
   });
 
+  // Delete route for removing a post
+router.delete('/:postId', async (req, res) => {
+    try {
+      const currentUser = await User.findById(req.session.user._id);
+
+      currentUser.posts.id(req.params.postId).remove();
+
+      await currentUser.save();
+
+      res.redirect(`/users/${currentUser._id}/posts`);
+    } catch (error) {
+      console.log(error);
+      res.redirect('/posts');
+    }
+  });
 module.exports = router;
