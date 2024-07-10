@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema({
   },
   bio: String,
   profilePicture: String,
-  post: [postSchema]
+  posts: [postSchema]
 });
 
 const User = mongoose.model('User', userSchema);

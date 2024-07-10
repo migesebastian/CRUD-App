@@ -40,18 +40,18 @@ app.use(
   })
 );
 
+app.use(passUserToView);
 
 app.get('/', (req, res) => {
-  res.render('index.ejs', {
-    user: req.session.user,
+    res.render('index.ejs');
   });
-});
+
 
 app.use('/auth', authController);
 app.use('/posts', postsController);
 app.use('/users', usersController); 
-app.use(passUserToView);
 app.use(isSignedIn);
+
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);

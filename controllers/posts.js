@@ -7,10 +7,8 @@ const User = require('../models/user.js');
 router.get('/', async (req, res) => {
     try {
       // Look up the user from req.session
-      const currentUser = await User.findById(req.session.user._id).exec();
-      // Ensure the posts array is initialized
+      const currentUser = await User.findById(req.session.user._id);
       const posts = currentUser.posts || [];
-      // Send all posts to the view via res.locals
       res.render('posts/index.ejs', {
         posts: posts,
         user: currentUser
@@ -30,19 +28,15 @@ router.get('/new', (req, res) => {
     try {
       const currentUser = await User.findById(req.session.user._id);
   
-      // Ensure the posts array is initialized
       if (!currentUser.posts) {
         currentUser.posts = [];
       }
   
-      // Push req.body (the new form data object) to the posts array of the current user
       currentUser.posts.push(req.body);
   
-      // Save changes to the user
       await currentUser.save();
   
-      // Redirect back to the posts index view with a success message
-      res.redirect(`/users/${currentUser._id}/posts`);
+      res.redirect('/posts');
     } catch (error) {
       console.log(error);
       res.redirect('/posts/new');
@@ -86,26 +80,26 @@ router.put('/:postId', async (req, res) => {
       const post = currentUser.posts.id(req.params.postId);
       post.set(req.body);
       await currentUser.save();
-      res.redirect(`/users/${currentUser._id}/posts/${req.params.postId}`);
+      res.redirect(`/posts`);
     } catch (error) {
       console.log(error);
       res.redirect(`/posts/${req.params.postId}/edit`);
     }
   });
-
   // Delete route for removing a post
 router.delete('/:postId', async (req, res) => {
     try {
       const currentUser = await User.findById(req.session.user._id);
 
-      currentUser.posts.id(req.params.postId).remove();
+      currentUser.posts.id(req.params.postId).deleteOne();
 
       await currentUser.save();
 
-      res.redirect(`/users/${currentUser._id}/posts`);
+      res.redirect(`/posts`);
     } catch (error) {
       console.log(error);
       res.redirect('/posts');
     }
   });
+
 module.exports = router;
