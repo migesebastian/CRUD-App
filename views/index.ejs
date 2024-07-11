@@ -3,14 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nomads Abroud</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <title>Nomads Abroad</title>
 </head>
 <body>
   <%- include('partials/_navbar') %>
-  <% if (user) { %>
-    <p>Welcome, <%= user.username %>!</p>
-  <% } %>
-  <h1>Nomads Home</h1>
-  <a href="/posts">View Posts</a>
+  <div class="container main-content">
+    <% if (user) { %>
+      <p class="welcome-message">Welcome, <%= user.username %>!</p>
+      <h1>Nomads Home</h1>
+      <a href="/posts" class="main-button">View Posts</a>
+    <% } else { %>
+      <h1>Nomads Home</h1>
+      <p class="welcome-message">Welcome to Nomads Abroad!</p>
+      <a href="/auth/sign-up" class="main-button">Sign Up</a>
+      <a href="/auth/sign-in" class="main-button">Sign In</a>
+    <% } %>
+  </div>
 </body>
 </html>

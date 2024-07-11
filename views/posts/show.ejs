@@ -3,21 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css" />
   <title><%= user.username %>'s Profile</title>
 </head>
 <body>
   <%- include('../partials/_navbar') %>
-  <h1><%= user.username %>'s Profile</h1>
-  <p>Email: <%= user.email %></p>
-  <p>Bio: <%= user.bio %></p>
-  <p>Profile Picture: <img src="<%= user.profilePicture %>" alt="<%= user.username %>'s profile picture"></p>
-  <a href="/users/<%= user._id %>/edit">Edit Profile</a>
-  <h2>Posts by <%= user.username %>:</h2>
-  <% user.posts.forEach(function(post) { %>
-    <div>
-      <h3><a href="/posts/<%= post._id %>"><%= post.title %></a></h3>
-      <p><%= post.content.substring(0, 100) %>...</p>
+  <div class="container main-content">
+    <h1><%= user.username %>'s Profile</h1>
+    <div class="profile">
+      <div class="profile-picture">
+        <img src="<%= user.profilePicture %>" alt="<%= user.username %>'s profile picture">
+      </div>
+      <div class="profile-details">
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Bio:</strong> <%= user.bio %></p>
+      </div>
     </div>
-  <% }) %>
+    <a href="/users/<%= user._id %>/edit" class="edit-button">Edit Profile</a>
+
+    <h2>Posts by <%= user.username %>:</h2>
+    <% if (user.posts && user.posts.length > 0) { %>
+      <ul class="post-list">
+        <% user.posts.forEach(function(post) { %>
+          <li class="post-item">
+            <div>
+              <h3><a href="/posts/<%= post._id %>"><%= post.title %></a></h3>
+              <p><%= post.content.substring(0, 100) %>...</p>
+            </div>
+            <div class="post-actions">
+              <a href="/posts/<%= post._id %>" class="view-button">View</a>
+              <a href="/posts/<%= post._id %>/edit" class="edit-button">Edit</a>
+              <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No posts found.</p>
+    <% } %>
+  </div>
 </body>
 </html>

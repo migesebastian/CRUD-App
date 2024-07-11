@@ -3,30 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css" />
   <title>My Posts</title>
 </head>
 <body>
   <%- include('../partials/_navbar') %>
-  <h1>Welcome to My Posts</h1>
+  <div class="container main-content">
+    <h1>Welcome to My Posts</h1>
 
-  <a href="/posts/new">Create New Post</a>
+    <a href="/posts/new" class="main-button">Create New Post</a>
 
-  <h2>Your Posts</h2>
-  <% if (posts.length > 0) { %>
-    <ul>
-      <% posts.forEach(post => { %>
-        <li>
-          <%= post.title %> - <%= post.content.substring(0, 100) %>... - <%= new Date(post.createdAt).toDateString() %>
-          <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
-            <button type="submit">Delete</button>
-          </form>
-          <a href="/posts/<%= post._id %>/edit">Edit</a>
-          <a href="/posts/<%= post._id %>">View</a>
-        </li>
-      <% }) %>
-    </ul>
-  <% } else { %>
-    <p>There are no posts available.</p>
-  <% } %>
+    <h2>Your Posts</h2>
+    <% if (posts.length > 0) { %>
+      <ul class="post-list">
+        <% posts.forEach(post => { %>
+          <li class="post-item">
+            <div>
+              <h3><a href="/posts/<%= post._id %>"><%= post.title %></a></h3>
+              <p><%= post.content.substring(0, 100) %>...</p>
+              <p><%= new Date(post.createdAt).toDateString() %></p>
+            </div>
+            <div class="post-actions">
+              <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+              <a href="/posts/<%= post._id %>/edit" class="edit-button">Edit</a>
+              <a href="/posts/<%= post._id %>" class="view-button">View</a>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>There are no posts available.</p>
+    <% } %>
+  </div>
 </body>
 </html>
