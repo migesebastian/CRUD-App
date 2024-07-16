@@ -14,8 +14,6 @@ router.get('/', async (req, res) => {
         user: currentUser
       });
     } catch (error) {
-      // If any errors, log them and redirect back home
-      console.log(error);
       res.redirect('/');
     }
   });
@@ -38,7 +36,6 @@ router.get('/new', (req, res) => {
   
       res.redirect('/posts');
     } catch (error) {
-      console.log(error);
       res.redirect('/posts/new');
     }
   });
@@ -53,7 +50,6 @@ router.get('/:postId', async (req, res) => {
         user: currentUser
       });
     } catch (error) {
-      console.log(error);
       res.redirect('/posts');
     }
   });
@@ -68,7 +64,6 @@ router.get('/:postId/edit', async (req, res) => {
         user: currentUser
       });
     } catch (error) {
-      console.log(error);
       res.redirect('/posts');
     }
   });
@@ -82,7 +77,6 @@ router.put('/:postId', async (req, res) => {
       await currentUser.save();
       res.redirect(`/posts`);
     } catch (error) {
-      console.log(error);
       res.redirect(`/posts/${req.params.postId}/edit`);
     }
   });
@@ -97,7 +91,6 @@ router.delete('/:postId', async (req, res) => {
 
       res.redirect(`/posts`);
     } catch (error) {
-      console.log(error);
       res.redirect('/posts');
     }
   });
